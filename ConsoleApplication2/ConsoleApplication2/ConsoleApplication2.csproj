@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Extension.cs" />
     <Compile Include="Liaison\CoucheLiaison.cs" />
-    <Compile Include="Liaison\Hamming.cs" />
+    <Compile Include="Liaison\Hamm2.cs" />
     <Compile Include="Noyau.cs" />
     <Compile Include="Physique\CouchePhysique.cs" />
     <Compile Include="Physique\Perturbations.cs" />
