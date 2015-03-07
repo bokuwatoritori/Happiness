@@ -109,7 +109,8 @@ namespace ConsoleApplication2.Liaison
                 {
                     bitErrone += (int)Math.Pow(2.0, (double)i);
                 }
-                tabDef[bitErrone - 1] = !tabDef[bitErrone - 1];
+                if(bitErrone!=0)
+                    tabDef[bitErrone - 1] = !tabDef[bitErrone - 1];
             }
             return tabDef;
         }
@@ -194,7 +195,7 @@ namespace ConsoleApplication2.Liaison
         /// </summary>
         /// <param name="tabHamming">une trame avec les bit de haming quon souhaite enlever</param>
         /// <returns>sans bit de hamming (27 bit)</returns>
-        public static bool[] enleveHamming(bool[] tabHamming)
+        public static void enleveHamming(bool[] tabHamming, bool[] tabReception)
         {
             int i = 2;
             int j = 0;
@@ -204,7 +205,10 @@ namespace ConsoleApplication2.Liaison
                 if ((i == 3) || (i == 7) || (i == 15) || (i == 31) && i < 33) i++;
                 tabDefinitif[j] = tabHamming[i];
             }
-            return tabDefinitif;
+            for (int h = 0; h < Math.Min(tabReception.Length, tabDefinitif.Length); h++)
+            {
+                tabReception[h] = tabDefinitif[h];
+            }
         }
 
 
@@ -243,15 +247,28 @@ namespace ConsoleApplication2.Liaison
             if (Corrigeable)
             {
                 tabTemp = corrigeHamming(taberror, tabTemp);
-                tabFinale = enleveHamming(tabTemp);
+                enleveHamming(tabTemp,tabFinale);
+                Console.WriteLine();
+                for (int i = 0; i < tabTemp.Length; i++)
+                {
+                    if (tabTemp[i])
+                        Console.Write("1");
+                    else
+                        Console.Write("0");
+                }
+                Console.WriteLine();
                 R.erreur = false;
             }
 
             if (!R.erreur)
             {
-                tabFinale = enleveHamming(tabTemp);
+                enleveHamming(tabTemp,tabFinale);
             }
-            R.tabTrame = tabFinale;
+            R.tabTrame = new bool[tabFinale.Length];
+            for (int i = 0; i < tabFinale.Length; i++)
+            {
+                R.tabTrame[i] = tabFinale[i];
+            }
             return R;
         }
     }

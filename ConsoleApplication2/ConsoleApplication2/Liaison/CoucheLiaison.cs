@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleApplication2.Liaison
@@ -12,12 +13,7 @@ namespace ConsoleApplication2.Liaison
         public bool isEmetteur;
         bool hamming;
         bool rejet;
-        char[] car;
-        bool[] reception;
         bool[][] emission;
-        StreamReader file;
-        Trame trame;
-        private volatile bool _shouldStop;
         int noTrame = 0;
         Rejet rj;
         int timer = 5;
@@ -87,22 +83,26 @@ namespace ConsoleApplication2.Liaison
         {
             while (recevoir() != Rejet.FINI)
             {
-
+                //Console.WriteLine("      pull");
             }
+
         }
 
         public void Push()
         {
-            char[] fichierEclate = Noyau.lireFichier();
+            char[] fichierEclate=new char[Noyau.ligneFichierLecture()];
+            Noyau.lireFichier(fichierEclate);
             int nbrTrame = fichierEclate.Length;
             emission = new bool[nbrTrame][];
             for (int i = 0; i < nbrTrame; i++)
             {
-                Transtypage.IntegerToBits((int)fichierEclate[i], 8).CopyTo(emission[i], 8 * i);
+                emission[i] = new bool[8];
+                Transtypage.IntegerToBits((int)fichierEclate[i], 8).CopyTo(emission[i],0);
             }
             envoiTermine = false;
             while (!envoiTermine)
             {
+                //Console.WriteLine("push");
                 envoyer();
                 if (recevoir() == nbrTrame)
                     envoiTermine = true;
@@ -113,8 +113,12 @@ namespace ConsoleApplication2.Liaison
 
         void envoyer()//Tableau de 8 bool de donnee a envoyer
         {
+            Trame envoie;
             noTrame = rj.choixDeTrame();
-            Trame envoie = new Trame(emission.Length == 1 ? Trame.TypeTrame.End : Trame.TypeTrame.Data, emission[noTrame].Length, noTrame, Noyau.hammingCorrecteur, 1, 0, emission[noTrame]);
+            if(noTrame < emission.Length)
+                envoie = new Trame(Trame.TypeTrame.Data, emission[noTrame].Length, noTrame, Noyau.hammingCorrecteur, 1, 0, emission[noTrame]);
+            else
+                 envoie =  new Trame(Trame.TypeTrame.End,0,noTrame,Noyau.hammingCorrecteur,1,0,new bool[8]);
             bool[] paquet = Hamming.ajouteHamming(envoie.ToBool());
             Send(paquet);
         }
@@ -123,41 +127,57 @@ namespace ConsoleApplication2.Liaison
         {
             if (p.Length != 33)
                 throw new InvalidOperationException("Je ne vais pas envoyer a la couche physique un paquet sans hamming!");
+            Noyau.mutex1.WaitOne();
+            if (Noyau.pretEmettre)
+            {
+                Noyau.envoieSource = new bool[p.Length];
+                for (int i = 0; i < p.Length; i++)
+                {
 
-            bool[] envoieSource = new bool[p.Length];
-            p.CopyTo(envoieSource, 0);
-            Noyau.envoieSource = envoieSource;
-            Noyau.pretEmettre = false;
-            Noyau.synchcond1.Release(); //V
+                    Noyau.envoieSource[i] = p[i];
+                }
+                Noyau.pretEmettre = false;
+                Noyau.synchcond1.Release(); //V
+            }
+            Noyau.mutex1.Release();
         }
 
         int recevoir()//Tableau de 8 bool de donnee a recevoir
         {
             int retour = -4;
-            if (Noyau.receptionDestination != null)
+            Noyau.mutex2.WaitOne();
+            if (Noyau.receptionDestination != null && Noyau.donneRecue)
             {
+
                 bool[] trame = new bool[Noyau.receptionDestination.Length];
                 for (int i = 0; i < trame.Length; i++)
                 {
                     trame[i] = Noyau.receptionDestination[i];
                 }
+
                 Trame tramePropre;
                 Hamming.retour resultHamming;
                 resultHamming = Hamming.HammingReception(trame);
                 tramePropre = new Trame(resultHamming.tabTrame);
+                Console.WriteLine(tramePropre.GetDonnees());
                 if (tramePropre.GetAdrDestination() == Convert.ToInt32(isEmetteur))
                 {
                     retour = rj.Receive(resultHamming);
                     Noyau.donneRecue = false;
                     Noyau.synchcond2.Release();
                 }
+
             }
+            else if(Noyau.donneRecue)
+            {
+                Noyau.donneRecue = false;
+                Noyau.synchcond2.Release();
+            }
+                
+            Noyau.mutex2.Release();
             return retour;
         }
-        public void RequestStop()
-        {
-            _shouldStop = true;
-        }
+
 
         public static void EnvoiAck(int numero, int adrSrc, int adrDest)
         {
