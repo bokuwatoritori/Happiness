@@ -108,6 +108,7 @@ namespace ConsoleApplication2
             for (int i = reception.Keys.Min(); i < partiesRecues; i++)
             {
                 trame = new Trame(reception[i]);
+                if (trame.GetTypeTrame() != Trame.TypeTrame.End)
                 Noyau.ecrireFichier(Transtypage.IntegerToBits(trame.GetDonnees(), 8)); //on envoit la trame a la couche reseau
                 reception.Remove(i);
             }
