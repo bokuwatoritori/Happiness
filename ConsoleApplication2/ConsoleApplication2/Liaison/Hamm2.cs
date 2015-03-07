@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApplication2.Liaison
 {
-    public class Hamming
+    public class Hamm2
     {
         public struct retour
         {
@@ -181,8 +181,8 @@ namespace ConsoleApplication2.Liaison
         {
             retour R;
             int cpt = 0;
-            R.erreur = taberror.Any(x => x == true);
             bool[] taberror = verifHamming(tabTemp);
+            R.erreur = taberror.Any(x => x == true);
             //int adresse = 0;
             //int idThread = 10; // A MODIFIER. Adresse de l'instance de thread
             // On vérifie s'il y a effectivement des erreurs
