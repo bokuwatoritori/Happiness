@@ -12,7 +12,7 @@ namespace ConsoleApplication2.Physique
         float affaiblissement, interference, dedoublement, pretard, perte;
         public bool[] trame { get; set; }
         private Random rnd = new Random();
-
+        //Chaque perturbation a une certaine probabilité, definissable dans le constructeur
         public Perturbations(float affaiblissement, float interference, float dedoublement, float pretard, float perte)
         {
             this.affaiblissement = affaiblissement;
@@ -32,9 +32,9 @@ namespace ConsoleApplication2.Physique
 
         }
 
+        //L'affaiblissement, lorsqu'il est percevable après l'interprétation de la couche physique revient à ramener quelques bits à 0
         public void Affaiblissement()
         {
-            Console.WriteLine("Perturbations de la couche physique : Affaiblissement applique...");
             for (int i = 0; i < this.trame.Length; i++)
             {
                 if (rnd.Next(1000) > (1 - affaiblissement) * 1000)
@@ -44,10 +44,10 @@ namespace ConsoleApplication2.Physique
             }
         }
 
+        //Les interférences, après l'interprétation de la couche physique revient a transformer certains bits en 1 et d'autres en 0
         public void Interference()
         {
             int rand;
-            Console.WriteLine("Perturbations de la couche physique : Interference applique...");
             for (int i = 0; i < trame.Length; i++)
             {
                 rand = rnd.Next(1000);
@@ -62,11 +62,11 @@ namespace ConsoleApplication2.Physique
             }
         }
 
+        //Le dedoublement garde en mémoire la trame dedoublee et laisse la trame intacte
         public void Dedoublement()
         {
             if (rnd.Next(1000) > (1 - dedoublement) * 1000)
             {
-                Console.WriteLine("Perturbations de la couche physique : Dedoublement applique...");
                 retard = new bool[trame.Length];
                 for (int i = 0; i < retard.Length; i++)
                 {
@@ -75,11 +75,11 @@ namespace ConsoleApplication2.Physique
             }
         }
 
+        //Le retard garde en mémoire la trame et la supprime de la trame actuelle
         public bool Retard()
         {
             if (rnd.Next(1000) > (1 - pretard) * 1000 && retard == null)
             {
-                Console.WriteLine("Perturbations de la couche physique : Retard applique...");
                 retard = new bool[trame.Length];
                 for (int i = 0; i < retard.Length; i++)
                 {
@@ -87,9 +87,9 @@ namespace ConsoleApplication2.Physique
                 }
                 return false;
             }
+            //Ici est géré le fait qu'une trame retardée ou dédoublée puisse réapparaitre
             if (rnd.Next(1000) > 700 && retard != null)
             {
-                Console.WriteLine("Perturbations de la couche physique : Retard termine...");
                 for (int i = 0; i < Math.Min(trame.Length, retard.Length); i++)
                 {
                     trame[i] = retard[i];
@@ -99,11 +99,11 @@ namespace ConsoleApplication2.Physique
             return true;
         }
 
+        //La perte revient à supprimer une trame (effectuée dans notre cas dans la couche physique).
         public bool Perte()
         {
             if (rnd.Next(1000) > (1 - perte) * 1000)
             {
-                Console.WriteLine("Perturbations de la couche physique : Perte applique...");
                 return false;
             }
             return true;

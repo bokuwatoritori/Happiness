@@ -11,6 +11,8 @@ namespace ConsoleApplication2.Physique
         private Perturbations perturb;
         private bool[] trame;
         private volatile bool _shouldStop = false;
+        //La création d'une couche physique ne sert au départ qu'à créer l'objet de perturbation lié
+        //Cet objet de la classe Perturbation contiendra les paramètres pour chaque perturbation jusqu'à la fin de l'exécution
         public CouchePhysique()
         {
             perturb = new Perturbations();
@@ -24,36 +26,34 @@ namespace ConsoleApplication2.Physique
 
         public void boucle()
         {
+            //Tant que personne n'appelle la méthode RequestToStop, le programme tourne en boucle
             while (!_shouldStop)
             {
-                Console.WriteLine("                        0 semaphore passe");
                 Noyau.synchcond1.WaitOne();
-                Console.WriteLine("                        1 er semaphore passe");
                 Noyau.synchcond2.WaitOne();
-                Console.WriteLine("                        2 em semaphore passe");
                 //On attend que pretEmettre et donneeRecue soient faux
                 Noyau.mutex1.WaitOne();
-                Console.WriteLine("                        3 em semaphore passe");
                 Noyau.mutex2.WaitOne();
-                Console.WriteLine("                        4 em semaphore passe");
                 //On s'assure que personne ne touche aux variables en meme temps
                 //On verifie tout de meme pour respecter l'enonce 2.3
                 if (!Noyau.pretEmettre && !Noyau.donneRecue)
                 {
-                    Console.WriteLine("Couche Physique : Debut du transfert sur la couche physique...");
+                    //Lorsque les conditions sont favorables, on copie le continue d'envoie source dans une trame qui va etre perturbée
                     trame = new bool[Noyau.envoieSource.Length];
 
                     for (int i = 0; i < trame.Length; i++)
                     {
                         trame[i] = Noyau.envoieSource[i];
                     }
-                    Console.WriteLine("Couche Physique : Application des perturbations ...");
+                    //On lui applique les perturbations
                     perturb.trame = trame;
                     perturb.Affaiblissement();
                     perturb.Interference();
                     perturb.Dedoublement();
+                    //Retard et perte envoie false lorsque la trame est perdue (ou renvoyée plus tard)
                     if (perturb.Retard() && perturb.Perte())
                     {
+                        //Si la trame n'est pas perdue, on la copie dans reception destination
                         Noyau.receptionDestination = new bool[trame.Length];
                         for (int i = 0; i < Noyau.receptionDestination.Length; i++)
                         {
@@ -64,16 +64,18 @@ namespace ConsoleApplication2.Physique
                     {
                         Noyau.receptionDestination = null;
                     }
+                    //On reinitialise pretEmettre et donneRecue, on nettoie la perturbation (le pointeur de la trame a modifier est nettoyé).
                     Noyau.pretEmettre = true;
                     Noyau.donneRecue = true;
                     perturb.Clean();
-                    Console.WriteLine("Couche Physique : Trame arrivee a destination ...");
                 }
                 else
                 {
+                    //Dans le cas où la conditions etait fausse, on relache nous meme la synchro conditionnelle
                     Noyau.synchcond1.Release();
                     Noyau.synchcond2.Release();
                 }
+                //On sort des exclusions mutuelles
                 Noyau.mutex2.Release();
                 Noyau.mutex1.Release();
 
