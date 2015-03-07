@@ -16,7 +16,7 @@ namespace ConsoleApplication2
         public static readonly int ERROR = -10;
 
 
-        protected abstract int ReceptionAckNak(Trame t);
+        protected abstract int ReceptionAckNak(Trame t, bool erreur);
         protected abstract int ReceptionPaquet(Trame t, bool erreur);
 
 
@@ -38,7 +38,7 @@ namespace ConsoleApplication2
                     break;
                 case Trame.TypeTrame.Ack:
                 case Trame.TypeTrame.Nack:
-                    etat = ReceptionAckNak(trame);
+                    etat = ReceptionAckNak(trame, t.erreur);
                     break;
             }
             return etat;
