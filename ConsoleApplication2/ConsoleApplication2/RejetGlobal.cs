@@ -42,7 +42,7 @@ namespace ConsoleApplication2
                 if (trame.GetNumero() == numeroTrameAttendue) //on recoit la bonne trame
                 {
                     Console.Out.WriteLine("Machine : Reception données - Trame : " + trame.GetNumero());
-                    Console.Out.WriteLine("Adresse source :" + trame.GetAdrSource() + "- Taille données :" + trame.GetTailleDonnees());
+                    Console.Out.WriteLine("\tAdresse source :" + trame.GetAdrSource() + "- Taille données :" + trame.GetTailleDonnees());
                     Liaison.CoucheLiaison.EnvoiAck(trame.GetNumero(), trame.GetAdrDestination(), trame.GetAdrSource());
                     numeroTrameAttendue++;
                     Console.Out.WriteLine("Machine " + trame.GetAdrSource() + " : Envoi accusé de réception paquet" + trame.GetNumero());

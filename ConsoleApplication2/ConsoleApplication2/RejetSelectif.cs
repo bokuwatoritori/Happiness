@@ -42,7 +42,7 @@ namespace ConsoleApplication2
                 }
                 else //reception dun packet trop loin
                 {
-                    if (partie <= partiesRecues + tailleFenetre)
+                    if (partie > partiesRecues && partie <= partiesRecues + tailleFenetre)
                         Inserer(partie, trame.ToBool());
 
                     if (nackMode)
@@ -63,7 +63,6 @@ namespace ConsoleApplication2
 
         protected void Inserer(int partie, bool[] packet)
         {
-            Console.Out.Write("c");
             if (!reception.Keys.Any(x => x == partie)) // Un packet jamais recu avant!
             {
                 reception.Add(partie, packet);
@@ -98,6 +97,7 @@ namespace ConsoleApplication2
 
         public override int choixDeTrame()
         {
+            Console.Out.WriteLine(partieEnvoye);
             if (overridePacketToSend.HasValue)
             {
                 partieEnvoye = overridePacketToSend.Value;
@@ -105,7 +105,10 @@ namespace ConsoleApplication2
             }
             else
             {
-                partieEnvoye++;
+                if (partieEnvoye <= partiesEnvoyes + tailleFenetre)
+                    partieEnvoye++;
+                else
+                    partieEnvoye = partiesEnvoyes + 1;
             }
 
             return partieEnvoye;
