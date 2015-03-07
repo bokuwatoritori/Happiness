@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -169,52 +170,53 @@ namespace ConsoleApplication2
                         repondu = true;
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'affaiblissement");
                         texteEnvoi = Console.ReadLine();
-                        while (Console.ReadLine() == null || !(Convert.ToSingle(texteEnvoi) <= 1.0 && Convert.ToSingle(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null || !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float) Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        affaiblissement = Convert.ToSingle(texteEnvoi);
+                        affaiblissement = (float) Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
+                        Console.WriteLine(affaiblissement.ToString());
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'interference : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null || !((Single.Parse(texteEnvoi) <= 1.0 && Single.Parse(texteEnvoi) >= 0.0)))
+                        while (texteEnvoi == null || !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        interference = Single.Parse(texteEnvoi);
+                        interference = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour le dedoublement : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        dedoublement = float.Parse(texteEnvoi);
+                        dedoublement = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour le retard : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        pretard = float.Parse(texteEnvoi);
+                        pretard = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour la perte : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        perte = float.Parse(texteEnvoi);
+                        perte = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                         texteEnvoi = null;
 
                         couchePhy = new Physique.CouchePhysique(affaiblissement, interference, dedoublement, pretard, perte);
