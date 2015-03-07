@@ -48,16 +48,16 @@ namespace ConsoleApplication2
 
             Physique.CouchePhysique couchePhy = null;
 
+            Console.WriteLine("Bienvenue à cette simulation de communication entre 2 couches liaison.");
             while (!repondu)
             {
-                Console.WriteLine("Bienvenue à cette simulation de communication entre 2 couches liaison.");
                 Console.WriteLine("Souhaitez vous définir vos parametres de la couche liaison ? (Y/N)");
                 texteEnvoi = Console.ReadLine();
                 if (texteEnvoi.ToUpper().Equals("Y"))
                 {
                     Console.WriteLine("Veuillez entrer l'adresse du fichier lecture : ");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !File.Exists(texteEnvoi))
+                    while (texteEnvoi == null || !File.Exists(texteEnvoi))
                     {
                         Console.WriteLine("Erreur, entrer l'adresse du fichier lecture : ");
                         texteEnvoi = Console.ReadLine();
@@ -125,22 +125,22 @@ namespace ConsoleApplication2
 
                     repondu = false;
                     Console.WriteLine("Quelle taille de fenetre souhaitez vous utiliser ? Choisissez un nombre superieur a 0");
-                    reponseint = Console.Read();
-                    while (reponseint < 0)
+                    texteEnvoi = Console.ReadLine();
+                    while (Convert.ToInt32(texteEnvoi) < 0)
                     {
                         Console.WriteLine("Erreur, veuillez choisir un nombre superieur a 0");
-                        reponseint = Console.Read();
+                        texteEnvoi = Console.ReadLine();
                     }
-                    tailleFen = reponseint;
+                    tailleFen = Convert.ToInt32(texteEnvoi);
 
                     Console.WriteLine("Quel nombre maximal de tentatives de renvoi souhaitez vous ? Choisissez un nombre superieur a 0");
-                    reponseint = Console.Read();
-                    while (reponseint <= 0)
+                    texteEnvoi = Console.ReadLine();
+                    while (Convert.ToInt32(texteEnvoi) <= 0)
                     {
                         Console.WriteLine("Erreur, veuillez choisir un nombre superieur a 0");
-                        reponseint = Console.Read();
+                        texteEnvoi = Console.ReadLine();
                     }
-                    nbEnvois = reponseint;
+                    nbEnvois = Convert.ToInt32(texteEnvoi);
 
 
                     emetteur = new Liaison.CoucheLiaison(true, correcteur, rejet, nbEnvois, tailleFen);
@@ -169,12 +169,12 @@ namespace ConsoleApplication2
                         repondu = true;
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'affaiblissement");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (Console.ReadLine() == null && !(Single.Parse(texteEnvoi) <= 1.0 && Single.Parse(texteEnvoi) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        affaiblissement = Convert.ToSingle(texteEnvoi);
+                        affaiblissement = Single.Parse(texteEnvoi);
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'interference : ");
