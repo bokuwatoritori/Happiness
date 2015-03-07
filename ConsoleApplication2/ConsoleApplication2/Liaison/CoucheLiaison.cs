@@ -90,11 +90,19 @@ namespace ConsoleApplication2.Liaison
             {
                 //Console.WriteLine("      pull");
             }
+
         }
 
         public void Push()
         {
-            char[] fichierEclate = Noyau.lireFichier();
+            char[] fichierEclate=new char[Noyau.ligneFichierLecture()];
+            Noyau.lireFichier(fichierEclate);
+            Console.WriteLine();
+            for (int i = 0; i < fichierEclate.Length; i++)
+            {
+                Console.Write(fichierEclate[i]);
+            }
+            Console.WriteLine();
             int nbrTrame = fichierEclate.Length;
             emission = new bool[nbrTrame][];
             for (int i = 0; i < nbrTrame; i++)
@@ -133,10 +141,19 @@ namespace ConsoleApplication2.Liaison
             Noyau.mutex1.WaitOne();
             if (Noyau.pretEmettre)
             {
+                Console.WriteLine();
                 Noyau.envoieSource = new bool[p.Length];
-                p.CopyTo(Noyau.envoieSource, 0);
-                Noyau.synchcond1.Release(); //V
+                for (int i = 0; i < p.Length; i++)
+                {
+                    if (p[i])
+                        Console.Write("1");
+                    else
+                        Console.Write("0");
+                    Noyau.envoieSource[i] = p[i];
+                }
+                Console.WriteLine();
                 Noyau.pretEmettre = false;
+                Noyau.synchcond1.Release(); //V
             }
             Noyau.mutex1.Release();
         }
@@ -153,6 +170,7 @@ namespace ConsoleApplication2.Liaison
                 {
                     trame[i] = Noyau.receptionDestination[i];
                 }
+
                 Trame tramePropre;
                 Hamming.retour resultHamming;
                 resultHamming = Hamming.HammingReception(trame);

@@ -9,3 +9,9 @@ C:\Users\dabbey\Source\Repos\Happiness\ConsoleApplication2\ConsoleApplication2\o
 C:\Users\dabbey\Source\Repos\Happiness\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe
 C:\Users\dabbey\Source\Repos\Happiness\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.pdb
 C:\Users\dabbey\Source\Repos\Happiness\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.csprojResolveAssemblyReference.cache
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe.config
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.exe
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.pdb
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.exe
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\bin\Debug\ConsoleApplication2.pdb
+C:\Users\user\Source\Repos\Happiness2\ConsoleApplication2\ConsoleApplication2\obj\Debug\ConsoleApplication2.csprojResolveAssemblyReference.cache

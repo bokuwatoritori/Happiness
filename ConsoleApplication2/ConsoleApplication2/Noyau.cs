@@ -15,7 +15,7 @@ namespace ConsoleApplication2
         static private int tailleFen;
         static private int nbEnvois;
         static private int nbTotal = 1;
-        static private int increment = 0;
+        static public int increment = 0;
 
 
         static private float affaiblissement;
@@ -226,31 +226,37 @@ namespace ConsoleApplication2
             TRecepteur.Start();
         }
 
-        public static char[] lireFichier()
+        public static int ligneFichierLecture()
         {
             string[] str;
             str = File.ReadAllLines(adresselecture);
-            Console.WriteLine("Voici le contenu du fichier lu :");
             int compteur = 0;
             for (int i = 0; i < str.Length; i++)
             {
                 compteur += str[i].Length;
-                Console.WriteLine(str[i]);
             }
-            char[] retour = new char[compteur];
-            nbTotal = compteur;
-            compteur = 0;
+            return compteur;
+        }
+
+
+        public static void lireFichier(char[] retour)
+        {
+            string[] str;
+            str = File.ReadAllLines(adresselecture);
+            Console.WriteLine("Voici le contenu du fichier");
+            nbTotal = ligneFichierLecture();
+            int compteur = 0;
             char[] test;
             for (int i = 0; i < str.Length; i++)
             {
+                Console.WriteLine(str[i]);
                 test = str[i].ToCharArray();
                 for (int j = 0; j < test.Length; j++)
                 {
-                    retour[i + compteur] = test[i];
+                    retour[j + compteur] = test[j];
                 }
                 compteur += str[i].Length;
             }
-            return retour;
         }
 
         public static void ecrireFichier(bool[] trame)
