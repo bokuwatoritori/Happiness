@@ -22,12 +22,15 @@ namespace ConsoleApplication2
             time = nombre;
         }
 
-        protected override int ReceptionAckNak(Trame t)
+        protected override int ReceptionAckNak(Trame t,bool erreur)
         {
-            if (t.GetTypeTrame() == Trame.TypeTrame.Ack)
+            if (!erreur)
             {
-                dernierePartieRecu = t.GetNumero();
-                return dernierePartieRecu;
+                if (t.GetTypeTrame() == Trame.TypeTrame.Ack)
+                {
+                    dernierePartieRecu = t.GetNumero();
+                    return dernierePartieRecu;
+                }
             }
             return NAK;
         }

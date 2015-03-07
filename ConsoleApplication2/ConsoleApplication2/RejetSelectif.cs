@@ -71,21 +71,25 @@ namespace ConsoleApplication2
         }
 
 
-        protected override int ReceptionAckNak(Trame trame)
+        protected override int ReceptionAckNak(Trame trame,bool erreur)
         {
             bool isAck = trame.GetTypeTrame() == Trame.TypeTrame.Ack;
             int numTrame = trame.GetNumero();
-            if (isAck) // ACK
+            if (!erreur)
             {
-                partiesEnvoyes = numTrame;
-                return partiesEnvoyes;
+                if (isAck) // ACK
+                {
+                    partiesEnvoyes = numTrame;
+                    return partiesEnvoyes;
+                }
+                else // NAK
+                {
+                    if (!overridePacketToSend.HasValue)
+                        overridePacketToSend = numTrame;
+                    return NAK;
+                }
             }
-            else // NAK
-            {
-                if (!overridePacketToSend.HasValue)
-                    overridePacketToSend = numTrame;
-                return NAK;
-            }
+            return NAK;
         }
 
 
