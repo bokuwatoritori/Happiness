@@ -177,11 +177,6 @@ namespace ConsoleApplication2.Liaison
                 Noyau.donneRecue = false;
                 Noyau.synchcond2.Release();
             }
-            Console.WriteLine(Noyau.donneRecue);
-            if (Noyau.receptionDestination != null)
-                Hamm2.AfficheTab(Noyau.receptionDestination, Noyau.receptionDestination.Length);
-            else
-                Console.WriteLine("ZBRRRRRRRRRRRRRRRA");
                 
             Noyau.mutex2.Release();
             return retour;
