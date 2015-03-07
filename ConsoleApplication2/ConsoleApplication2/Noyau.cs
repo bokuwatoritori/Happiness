@@ -161,25 +161,25 @@ namespace ConsoleApplication2
             Console.WriteLine("Souhaitez vous définir vos parametres de la couche physique ? (Y/N)");
             while (!repondu)
             {
-                reponseint = Console.Read();
+                texteEnvoi = Console.ReadLine();
                 try
                 {
-                    if (Convert.ToChar(reponseint) == 'Y' || Convert.ToChar(reponseint) == 'y')
+                    if (texteEnvoi.ToUpper().Equals("Y"))
                     {
                         repondu = true;
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'affaiblissement");
                         texteEnvoi = Console.ReadLine();
-                        while (Console.ReadLine() == null && !(Single.Parse(texteEnvoi) <= 1.0 && Single.Parse(texteEnvoi) >= 0.0))
+                        while (Console.ReadLine() == null || !(Convert.ToSingle(texteEnvoi) <= 1.0 && Convert.ToSingle(texteEnvoi) >= 0.0))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
                         }
-                        affaiblissement = Single.Parse(texteEnvoi);
+                        affaiblissement = Convert.ToSingle(texteEnvoi);
                         texteEnvoi = null;
 
                         Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'interference : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !(Single.Parse(texteEnvoi) <= 1.0 && Single.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null || !((Single.Parse(texteEnvoi) <= 1.0 && Single.Parse(texteEnvoi) >= 0.0)))
                         {
                             Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                             texteEnvoi = Console.ReadLine();
@@ -220,7 +220,7 @@ namespace ConsoleApplication2
                         couchePhy = new Physique.CouchePhysique(affaiblissement, interference, dedoublement, pretard, perte);
 
                     }
-                    else if (Convert.ToChar(reponseint) == 'N' || Convert.ToChar(reponseint) == 'n')
+                    else if (texteEnvoi.ToUpper().Equals("N"))
                     {
                         repondu = true;
                         couchePhy = new Physique.CouchePhysique();
