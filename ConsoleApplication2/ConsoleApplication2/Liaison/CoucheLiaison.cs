@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ConsoleApplication2.Liaison
@@ -87,7 +88,7 @@ namespace ConsoleApplication2.Liaison
         {
             while (recevoir() != Rejet.FINI)
             {
-
+                //Console.WriteLine("      pull");
             }
         }
 
@@ -98,11 +99,13 @@ namespace ConsoleApplication2.Liaison
             emission = new bool[nbrTrame][];
             for (int i = 0; i < nbrTrame; i++)
             {
-                Transtypage.IntegerToBits((int)fichierEclate[i], 8).CopyTo(emission[i], 8 * i);
+                emission[i] = new bool[8];
+                Transtypage.IntegerToBits((int)fichierEclate[i], 8).CopyTo(emission[i],0);
             }
             envoiTermine = false;
             while (!envoiTermine)
             {
+                //Console.WriteLine("push");
                 envoyer();
                 if (recevoir() == nbrTrame)
                     envoiTermine = true;
@@ -123,19 +126,24 @@ namespace ConsoleApplication2.Liaison
         {
             if (p.Length != 33)
                 throw new InvalidOperationException("Je ne vais pas envoyer a la couche physique un paquet sans hamming!");
-
-            bool[] envoieSource = new bool[p.Length];
-            p.CopyTo(envoieSource, 0);
-            Noyau.envoieSource = envoieSource;
-            Noyau.pretEmettre = false;
-            Noyau.synchcond1.Release(); //V
+            Noyau.mutex1.WaitOne();
+            if (Noyau.pretEmettre)
+            {
+                Noyau.envoieSource = new bool[p.Length];
+                p.CopyTo(Noyau.envoieSource, 0);
+                Noyau.synchcond1.Release(); //V
+                Noyau.pretEmettre = false;
+            }
+            Noyau.mutex1.Release();
         }
 
         int recevoir()//Tableau de 8 bool de donnee a recevoir
         {
             int retour = -4;
-            if (Noyau.receptionDestination != null)
+            Noyau.mutex2.WaitOne();
+            if (Noyau.receptionDestination != null && Noyau.donneRecue)
             {
+                
                 bool[] trame = new bool[Noyau.receptionDestination.Length];
                 for (int i = 0; i < trame.Length; i++)
                 {
@@ -151,6 +159,7 @@ namespace ConsoleApplication2.Liaison
                     Noyau.donneRecue = false;
                     Noyau.synchcond2.Release();
                 }
+                Noyau.mutex2.Release();
             }
             return retour;
         }

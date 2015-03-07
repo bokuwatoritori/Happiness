@@ -17,28 +17,8 @@ namespace ConsoleApplication2
 
 
         protected abstract int ReceptionAckNak(Trame t);
-        protected abstract int ReceptionPacket(Trame t, bool erreur);
+        protected abstract int ReceptionPaquet(Trame t, bool erreur);
 
-
-        /* public bool[] pull() // Retourner lees packet de recu non réclamé (sauf si bond, genre 0,1,3 on envois 0,1 seulement)
-         {
-             if(parties.Keys.Any(x=> x == PartieRéclamé+1 ))
-             {
-                 int longueur = 1;
-                 while (parties.Keys.Any(x => x == PartieRéclamé + longueur + 1))
-                     longueur++;
-
-                 var pris = parties.OrderBy(i => i.Key).Select(i=>i.Value).Take(longueur);
-                 PartieRéclamé = PartieRéclamé + longueur;
-                 return pris.Flatten();
-
-             }
-             else
-             {
-                 return new bool[] { };
-             }
-         }
-         a trifouiller */
 
         /// <summary>
         /// Gère la réception de messages, autants données que ACK/NAK
@@ -51,10 +31,10 @@ namespace ConsoleApplication2
             switch (trame.GetTypeTrame())
             {
                 case Trame.TypeTrame.Data:
-                    etat = ReceptionPacket(trame, t.erreur);
+                    etat = ReceptionPaquet(trame, t.erreur);
                     break;
                 case Trame.TypeTrame.End:
-                    etat = ReceptionPacket(trame, t.erreur);
+                    etat = ReceptionPaquet(trame, t.erreur);
                     break;
                 case Trame.TypeTrame.Ack:
                 case Trame.TypeTrame.Nack:

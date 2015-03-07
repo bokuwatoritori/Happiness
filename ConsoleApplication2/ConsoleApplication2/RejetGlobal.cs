@@ -32,7 +32,7 @@ namespace ConsoleApplication2
             return NAK;
         }
 
-        protected override int ReceptionPacket(Trame trame, bool erreur)
+        protected override int ReceptionPaquet(Trame trame, bool erreur)
         {
             if (!erreur)
             {

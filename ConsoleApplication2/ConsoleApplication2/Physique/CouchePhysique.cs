@@ -10,7 +10,7 @@ namespace ConsoleApplication2.Physique
     {
         private Perturbations perturb;
         private bool[] trame;
-        private volatile bool _shouldStop;
+        private volatile bool _shouldStop = false;
         public CouchePhysique()
         {
             perturb = new Perturbations();
@@ -24,15 +24,21 @@ namespace ConsoleApplication2.Physique
 
         public void boucle()
         {
-            while (_shouldStop)
+            while (!_shouldStop)
             {
+                Console.WriteLine("                        0 semaphore passe");
                 Noyau.synchcond1.WaitOne();
+                Console.WriteLine("                        1 er semaphore passe");
                 Noyau.synchcond2.WaitOne();
+                Console.WriteLine("                        2 em semaphore passe");
                 //On attend que pretEmettre et donneeRecue soient faux
                 Noyau.mutex1.WaitOne();
+                Console.WriteLine("                        3 em semaphore passe");
                 Noyau.mutex2.WaitOne();
+                Console.WriteLine("                        4 em semaphore passe");
                 //On s'assure que personne ne touche aux variables en meme temps
                 //On verifie tout de meme pour respecter l'enonce 2.3
+
                 if (!Noyau.pretEmettre && !Noyau.donneRecue)
                 {
                     Console.WriteLine("Couche Physique : Debut du transfert sur la couche physique...");

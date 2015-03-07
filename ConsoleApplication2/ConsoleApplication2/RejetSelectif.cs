@@ -19,7 +19,7 @@ namespace ConsoleApplication2
         {
             tailleFenetre = taille;
         }
-        protected override int ReceptionPacket(Trame trame, bool erreur)
+        protected override int ReceptionPaquet(Trame trame, bool erreur)
         {
             int partie = trame.GetNumero();
             if (!erreur)

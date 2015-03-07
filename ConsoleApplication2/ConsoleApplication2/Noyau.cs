@@ -27,19 +27,18 @@ namespace ConsoleApplication2
 
         static public bool[] envoieSource;
         static public bool[] receptionDestination;
-        static public bool pretEmettre;
-        static public bool donneRecue;
+        static public bool pretEmettre=true;
+        static public bool donneRecue=false;
         static public string adresselecture = "fichier.txt";
         static public string adresseecriture = "fichier2.txt";
         static public Semaphore mutex1 = new Semaphore(1, 1);
         static public Semaphore mutex2 = new Semaphore(1, 1);
         static public Semaphore synchcond1 = new Semaphore(0, 1);
-        static public Semaphore synchcond2 = new Semaphore(0, 1);
+        static public Semaphore synchcond2 = new Semaphore(1, 1);
         static public bool hammingCorrecteur = false;
 
         public static void Run()
         {
-            ecrireFichier(new bool[33]);
             int reponseint;
             bool repondu = false;
             string texteEnvoi;
