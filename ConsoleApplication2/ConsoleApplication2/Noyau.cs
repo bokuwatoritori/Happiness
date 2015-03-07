@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,11 @@ namespace ConsoleApplication2
         static public int increment = 0;
 
 
-        static private float affaiblissement;
-        static private float interference;
-        static private float dedoublement;
-        static private float pretard;
-        static private float perte;
+        static private float affaiblissement = 0;
+        static private float interference = 0;
+        static private float dedoublement = 0;
+        static private float pretard = 0;
+        static private float perte = 0;
 
 
         static public bool[] envoieSource;
@@ -48,20 +49,16 @@ namespace ConsoleApplication2
 
             Physique.CouchePhysique couchePhy = null;
 
+            Console.WriteLine("Bienvenue à cette simulation de communication entre 2 couches liaison.");
             while (!repondu)
             {
-                Console.WriteLine("Bienvenue à cette simulation de communication entre 2 couches liaison.");
                 Console.WriteLine("Souhaitez vous définir vos parametres de la couche liaison ? (Y/N)");
-                reponseint = Console.Read();
-                try
+                texteEnvoi = Console.ReadLine();
+                if (texteEnvoi.ToUpper().Equals("Y"))
                 {
-                    if ((char)reponseint == 'Y' || (char)reponseint == 'y')
-                    {
-                        repondu = true;
-                        Console.WriteLine("Veuillez entrer l'adresse du fichier lecture");
-
+                    Console.WriteLine("Veuillez entrer l'adresse du fichier lecture : ");
                         texteEnvoi = Console.ReadLine();
-                        while (texteEnvoi == null && !File.Exists(texteEnvoi))
+                    while (texteEnvoi == null || !File.Exists(texteEnvoi))
                         {
                             Console.WriteLine("Erreur, entrer l'adresse du fichier lecture : ");
                             texteEnvoi = Console.ReadLine();
@@ -79,143 +76,161 @@ namespace ConsoleApplication2
                         adresseecriture = texteEnvoi;
                         texteEnvoi = null;
 
+                    repondu = false;
                         Console.WriteLine("Souhaitez vous utiliser un code correcteur d'erreur (Hamming) ? (Y/N)");
-                        reponseint = Console.Read();
-                        while (Convert.ToChar(reponseint) != 'Y' || Convert.ToChar(reponseint) != 'y' || Convert.ToChar(reponseint) != 'N' || Convert.ToChar(reponseint) != 'n')
+                    while (!repondu)
                         {
-                            Console.WriteLine("Erreur, souhaitez vous utiliser un code correcteur d'erreur (Hamming) ? (Y/N)");
-                            reponseint = Console.Read();
-                        }
-                        if (Convert.ToChar(reponseint) != 'Y' || Convert.ToChar(reponseint) != 'y')
+                        texteEnvoi = Console.ReadLine();
+                        if (texteEnvoi.ToUpper().Equals("Y"))
                         {
                             correcteur = true;
                             Console.WriteLine("Utilisation d'un code correcteur d'erreur");
                         }
-                        else
+                        else if (texteEnvoi.ToUpper().Equals("N"))
                         {
                             correcteur = false;
                             Console.WriteLine("Utilisation d'un code detecteur d'erreur");
                         }
-
-                        Console.WriteLine("Souhaitez vous utiliser un rejet global ? (Y/N)");
-                        reponseint = Console.Read();
-                        while (Convert.ToChar(reponseint) != 'Y' || Convert.ToChar(reponseint) != 'y' || Convert.ToChar(reponseint) != 'N' || Convert.ToChar(reponseint) != 'n')
+                        else if (!(texteEnvoi.ToUpper().Equals("Y")) || !(texteEnvoi.ToUpper().Equals("N")))
                         {
-                            Console.WriteLine("Erreur, souhaitez vous utiliser un rejet global ? (Y/N)");
-                            reponseint = Console.Read();
+                            Console.WriteLine("Erreur, souhaitez vous utiliser un code correcteur d'erreur (Hamming) ? (Y/N)");
+                            texteEnvoi = Console.ReadLine();
                         }
-                        if (Convert.ToChar(reponseint) != 'Y' || Convert.ToChar(reponseint) != 'y')
+                        reponseint = 0;
+                        repondu = true;
+                    }
+
+                     
+                    repondu = false;    
+                        Console.WriteLine("Souhaitez vous utiliser un rejet global ? (Y/N)");
+                    while(!repondu)
+                        {
+                        texteEnvoi = Console.ReadLine();
+                        if (texteEnvoi.ToUpper().Equals("Y"))
                         {
                             rejet = true;
                             Console.WriteLine("Utilisation au rejet global");
                         }
-                        else
+                        else if(texteEnvoi.ToUpper().Equals("N"))
                         {
                             rejet = false;
                             Console.WriteLine("Utilisation au rejet selectif");
                         }
+                        else
+                        {
+                            Console.WriteLine("Erreur, souhaitez vous utiliser un rejet global ? (Y/N)");
+                            texteEnvoi = Console.ReadLine();
+                        }
+                        repondu = true;
+                    }
 
+                    repondu = false;
                         Console.WriteLine("Quelle taille de fenetre souhaitez vous utiliser ? Choisissez un nombre superieur a 0");
-                        reponseint = Console.Read();
-                        while (reponseint < 0 || reponseint == null)
+                    texteEnvoi = Console.ReadLine();
+                    while (Convert.ToInt32(texteEnvoi) < 0)
                         {
                             Console.WriteLine("Erreur, veuillez choisir un nombre superieur a 0");
-                            reponseint = Console.Read();
+                        texteEnvoi = Console.ReadLine();
                         }
-                        tailleFen = reponseint;
+                    tailleFen = Convert.ToInt32(texteEnvoi);
 
                         Console.WriteLine("Quel nombre maximal de tentatives de renvoi souhaitez vous ? Choisissez un nombre superieur a 0");
-                        reponseint = Console.Read();
-                        while (reponseint < 0 || reponseint == null)
+                    texteEnvoi = Console.ReadLine();
+                    while (Convert.ToInt32(texteEnvoi) <= 0)
                         {
                             Console.WriteLine("Erreur, veuillez choisir un nombre superieur a 0");
-                            reponseint = Console.Read();
+                        texteEnvoi = Console.ReadLine();
                         }
-                        nbEnvois = reponseint;
+                    nbEnvois = Convert.ToInt32(texteEnvoi);
 
 
                         emetteur = new Liaison.CoucheLiaison(true, correcteur, rejet, nbEnvois, tailleFen);
                         recepteur = new Liaison.CoucheLiaison(false, correcteur, rejet, nbEnvois, tailleFen);
+                    repondu = true;
 
                     }
-                    else if (Convert.ToChar(reponseint) == 'N' || Convert.ToChar(reponseint) == 'n')
+                    else if (texteEnvoi.ToUpper().Equals("N"))
                     {
                         repondu = true;
                         emetteur = new Liaison.CoucheLiaison(true, true, true);
                         recepteur = new Liaison.CoucheLiaison(false);
                     }
                 }
-                catch (OverflowException) { }
-            }
 
             // parametrisation couche physique
             repondu = false;
+            Console.WriteLine("Souhaitez vous définir vos parametres de la couche physique ? (Y/N)");
             while (!repondu)
             {
-                Console.WriteLine("Souhaitez vous définir vos parametres de la couche physique ? (Y/N)");
-                reponseint = Console.Read();
-                if (Convert.ToChar(reponseint) == 'Y' || Convert.ToChar(reponseint) == 'y')
+                texteEnvoi = Console.ReadLine();
+                try
+                {
+                    if (texteEnvoi.ToUpper().Equals("Y"))
                 {
                     repondu = true;
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'affaiblissement");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null || !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float) Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                     {
                         Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                         texteEnvoi = Console.ReadLine();
                     }
-                    affaiblissement = float.Parse(texteEnvoi);
+                        affaiblissement = (float) Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
+                        Console.WriteLine(affaiblissement.ToString());
                     texteEnvoi = null;
 
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'interference : ");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null || !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                     {
                         Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                         texteEnvoi = Console.ReadLine();
                     }
-                    interference = float.Parse(texteEnvoi);
+                        interference = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                     texteEnvoi = null;
 
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour le dedoublement : ");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                     {
                         Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                         texteEnvoi = Console.ReadLine();
                     }
-                    dedoublement = float.Parse(texteEnvoi);
+                        dedoublement = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                     texteEnvoi = null;
 
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour le retard : ");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                     {
                         Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                         texteEnvoi = Console.ReadLine();
                     }
-                    pretard = float.Parse(texteEnvoi);
+                        pretard = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                     texteEnvoi = null;
 
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour la perte : ");
                     texteEnvoi = Console.ReadLine();
-                    while (texteEnvoi == null && !(float.Parse(texteEnvoi) <= 1.0 && float.Parse(texteEnvoi) >= 0.0))
+                        while (texteEnvoi == null && !((float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) <= 1.0 && (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture) >= 0.0))
                     {
                         Console.WriteLine("Erreur, entrer un taux de proba correct entre 0 et 1");
                         texteEnvoi = Console.ReadLine();
                     }
-                    perte = float.Parse(texteEnvoi);
+                        perte = (float)Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
                     texteEnvoi = null;
 
                     couchePhy = new Physique.CouchePhysique(affaiblissement, interference, dedoublement, pretard, perte);
 
                 }
-                else if(Convert.ToChar(reponseint) == 'N' || Convert.ToChar(reponseint) == 'n')
+                    else if (texteEnvoi.ToUpper().Equals("N"))
                 {
                     repondu = true;
                     couchePhy = new Physique.CouchePhysique();
                 }
-            }
+
+                }
+                catch (OverflowException) { }
+            }                    
             outputFile = new System.IO.StreamWriter(adresseecriture);
             outputFile.AutoFlush = true;
             Thread couchePhyThread = new Thread(couchePhy.boucle);
