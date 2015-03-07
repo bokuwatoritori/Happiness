@@ -116,8 +116,12 @@ namespace ConsoleApplication2.Liaison
 
         void envoyer()//Tableau de 8 bool de donnee a envoyer
         {
+            Trame envoie;
             noTrame = rj.choixDeTrame();
-            Trame envoie = new Trame(emission.Length == 1 ? Trame.TypeTrame.End : Trame.TypeTrame.Data, emission[noTrame].Length, noTrame, Noyau.hammingCorrecteur, 1, 0, emission[noTrame]);
+            if(noTrame < emission.Length)
+                envoie = new Trame(Trame.TypeTrame.Data, emission[noTrame].Length, noTrame, Noyau.hammingCorrecteur, 1, 0, emission[noTrame]);
+            else
+                 envoie =  new Trame(Trame.TypeTrame.End,0,noTrame,Noyau.hammingCorrecteur,1,0,new bool[8]);
             bool[] paquet = Hamming.ajouteHamming(envoie.ToBool());
             Send(paquet);
         }
@@ -159,8 +163,9 @@ namespace ConsoleApplication2.Liaison
                     Noyau.donneRecue = false;
                     Noyau.synchcond2.Release();
                 }
-                Noyau.mutex2.Release();
+                
             }
+            Noyau.mutex2.Release();
             return retour;
         }
         public void RequestStop()

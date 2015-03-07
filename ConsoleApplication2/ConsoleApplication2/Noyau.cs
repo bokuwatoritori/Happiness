@@ -36,6 +36,7 @@ namespace ConsoleApplication2
         static public Semaphore synchcond1 = new Semaphore(0, 1);
         static public Semaphore synchcond2 = new Semaphore(1, 1);
         static public bool hammingCorrecteur = false;
+        static public System.IO.StreamWriter outpoutFile;
 
         public static void Run()
         {
@@ -212,10 +213,10 @@ namespace ConsoleApplication2
                 else if(Convert.ToChar(reponseint) == 'N' || Convert.ToChar(reponseint) == 'n')
                 {
                     repondu = true;
-                    couchePhy = new Physique.CouchePhysique();
+                    couchePhy = new Physique.CouchePhysique(0,0,0,0,0);
                 }
-            }                    
-
+            }
+            outpoutFile = new System.IO.StreamWriter(adresseecriture);
             Thread couchePhyThread = new Thread(couchePhy.boucle);
             couchePhyThread.Start();
             Thread TEmetteur = new Thread(emetteur.boucle);
@@ -253,11 +254,11 @@ namespace ConsoleApplication2
 
         public static void ecrireFichier(bool[] trame)
         {
-            string str = trame.ToString();
-            Console.WriteLine("Ecriture dans le fichier de : " + str + " = [" + increment / nbTotal + "%]");
-            System.IO.StreamWriter outpoutFile = new System.IO.StreamWriter(adresseecriture);
-            outpoutFile.WriteLine(str);
             increment++;
+            int res = (increment*100) / nbTotal;
+            string str = trame.ToString();
+            Console.WriteLine("Ecriture dans le fichier de : " + str + " = [" + res + "%]");
+            outpoutFile.WriteLine(str);
         }
 
     }
