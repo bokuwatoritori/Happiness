@@ -248,15 +248,6 @@ namespace ConsoleApplication2.Liaison
             {
                 tabTemp = corrigeHamming(taberror, tabTemp);
                 enleveHamming(tabTemp,tabFinale);
-                Console.WriteLine();
-                for (int i = 0; i < tabTemp.Length; i++)
-                {
-                    if (tabTemp[i])
-                        Console.Write("1");
-                    else
-                        Console.Write("0");
-                }
-                Console.WriteLine();
                 R.erreur = false;
             }
 
