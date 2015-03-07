@@ -10,6 +10,7 @@ namespace ConsoleApplication2
     {
         static void Main(string[] args)
         {
+            //Run est en fait le véritable main, cependant suite à des problèmes de compilation nous avons du séparer les deux
             Noyau.Run();
         }
     }
