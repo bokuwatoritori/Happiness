@@ -97,7 +97,7 @@ namespace ConsoleApplication2
 
         public override int choixDeTrame()
         {
-            Console.Out.WriteLine(partieEnvoye);
+            //Console.Out.WriteLine(partieEnvoye);
             if (overridePacketToSend.HasValue)
             {
                 partieEnvoye = overridePacketToSend.Value;
