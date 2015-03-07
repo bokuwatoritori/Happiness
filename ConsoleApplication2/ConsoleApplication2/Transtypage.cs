@@ -8,6 +8,7 @@ namespace ConsoleApplication2
 {
     class Transtypage
     {
+        //Nous permet de visualiser la valeur de 8 bits en int 
         public static int BitsToInteger(bool[] bits, int debut, int taille)
         {
             int resultat = 0;
@@ -25,6 +26,8 @@ namespace ConsoleApplication2
             }
             return resultat;
         }
+
+        //Facilite la transformation d'un caractère en bit, il suffit de le transtyper en Int puis de le passer en bool
         public static bool[] IntegerToBits(int valeur, int taille)
         {
             int reste = valeur;

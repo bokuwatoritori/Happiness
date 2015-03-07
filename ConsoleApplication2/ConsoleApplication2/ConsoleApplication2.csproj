@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extension.cs" />
     <Compile Include="Liaison\CoucheLiaison.cs" />
     <Compile Include="Liaison\Hamming.cs" />
     <Compile Include="Noyau.cs" />

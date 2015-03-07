@@ -56,6 +56,7 @@ namespace ConsoleApplication2
             Transtypage.IntegerToBits((int)donnee, 8).CopyTo(trame, 19);
         }
 
+        //On affiche chaque bool en valeur numérique (0 ou 1) et pas false/true
         public override String ToString()
         {
             String affichage = "Trame : ";
@@ -68,40 +69,51 @@ namespace ConsoleApplication2
             }
             return affichage;
         }
+
+        //Deux bits sont réservés pour le type de la trame (donnée,Ack,Nack ou Fin)
         public TypeTrame GetTypeTrame()
         {
             TypeTrame type = 0;
             type = (TypeTrame)Transtypage.BitsToInteger(trame, 0, 2);
             return type;
         }
+        //Quatre bits sont réservés pour la taille de donnée à l'intérieur d'une trame (max = 15 bits)
         public int GetTailleDonnees()
         {
             int taille = 0;
             taille = Transtypage.BitsToInteger(trame, 2, 4);
             return taille;
         }
+
+        //Huit bits sont réservés pour le nombre de trames à envoyer, on peut donc gérer un nombre conséquent de trame
+        //Cela compense le fait que les données soient réduites (max = 255 trames) 
         public int GetNumero()
         {
             int numero = 0;
             numero = Transtypage.BitsToInteger(trame, 6, 8);
             return numero;
         }
+        //Un bit est reserve pour savoir si le code est detecteur ou correcteur d'erreur
         public bool IsCorrecteur()
         {
             return trame[14];
         }
+
+        //Quatre bits sont reserves pour les adresses, les deux premiers sont pour la source...
         public int GetAdrSource()
         {
             int adresse = 0;
             adresse = Transtypage.BitsToInteger(trame, 15, 2);
             return adresse;
         }
+        //... et les deux derniers pour la destination. Cependant, un seul bit pour chaque adresse aurait suffit.
         public int GetAdrDestination()
         {
             int adresse = 0;
             adresse = Transtypage.BitsToInteger(trame, 17, 2);
             return adresse;
         }
+        //Les données dans notre cas sont sur huit bits, mais cela pour changer
         public int GetDonnees()
         {
             int donnee = 0;
