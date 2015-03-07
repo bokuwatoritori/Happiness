@@ -134,7 +134,7 @@ namespace ConsoleApplication2
                         }
                     tailleFen = Convert.ToInt32(texteEnvoi);
 
-                        Console.WriteLine("Quel nombre maximal de tentatives de renvoi souhaitez vous ? Choisissez un nombre superieur a 0");
+                        Console.WriteLine("Quel taux de raffraichissement par trame envoyee desirez-vous ? Choisissez un nombre superieur a 0");
                     texteEnvoi = Console.ReadLine();
                     while (Convert.ToInt32(texteEnvoi) <= 0)
                         {
