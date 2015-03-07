@@ -13,12 +13,7 @@ namespace ConsoleApplication2.Liaison
         public bool isEmetteur;
         bool hamming;
         bool rejet;
-        char[] car;
-        bool[] reception;
         bool[][] emission;
-        StreamReader file;
-        Trame trame;
-        private volatile bool _shouldStop;
         int noTrame = 0;
         Rejet rj;
         int timer = 5;
@@ -97,12 +92,6 @@ namespace ConsoleApplication2.Liaison
         {
             char[] fichierEclate=new char[Noyau.ligneFichierLecture()];
             Noyau.lireFichier(fichierEclate);
-            Console.WriteLine();
-            for (int i = 0; i < fichierEclate.Length; i++)
-            {
-                Console.Write(fichierEclate[i]);
-            }
-            Console.WriteLine();
             int nbrTrame = fichierEclate.Length;
             emission = new bool[nbrTrame][];
             for (int i = 0; i < nbrTrame; i++)
@@ -141,17 +130,12 @@ namespace ConsoleApplication2.Liaison
             Noyau.mutex1.WaitOne();
             if (Noyau.pretEmettre)
             {
-                Console.WriteLine();
                 Noyau.envoieSource = new bool[p.Length];
                 for (int i = 0; i < p.Length; i++)
                 {
-                    if (p[i])
-                        Console.Write("1");
-                    else
-                        Console.Write("0");
+
                     Noyau.envoieSource[i] = p[i];
                 }
-                Console.WriteLine();
                 Noyau.pretEmettre = false;
                 Noyau.synchcond1.Release(); //V
             }
@@ -164,7 +148,7 @@ namespace ConsoleApplication2.Liaison
             Noyau.mutex2.WaitOne();
             if (Noyau.receptionDestination != null && Noyau.donneRecue)
             {
-                
+
                 bool[] trame = new bool[Noyau.receptionDestination.Length];
                 for (int i = 0; i < trame.Length; i++)
                 {
@@ -175,21 +159,25 @@ namespace ConsoleApplication2.Liaison
                 Hamming.retour resultHamming;
                 resultHamming = Hamming.HammingReception(trame);
                 tramePropre = new Trame(resultHamming.tabTrame);
+                Console.WriteLine(tramePropre.GetDonnees());
                 if (tramePropre.GetAdrDestination() == Convert.ToInt32(isEmetteur))
                 {
                     retour = rj.Receive(resultHamming);
                     Noyau.donneRecue = false;
                     Noyau.synchcond2.Release();
                 }
-                
+
             }
+            else if(Noyau.donneRecue)
+            {
+                Noyau.donneRecue = false;
+                Noyau.synchcond2.Release();
+            }
+                
             Noyau.mutex2.Release();
             return retour;
         }
-        public void RequestStop()
-        {
-            _shouldStop = true;
-        }
+
 
         public static void EnvoiAck(int numero, int adrSrc, int adrDest)
         {

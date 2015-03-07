@@ -42,14 +42,16 @@ namespace ConsoleApplication2
                     Console.Out.WriteLine("Adresse source :" + trame.GetAdrSource() + "- Taille données :" + trame.GetTailleDonnees());
                     Liaison.CoucheLiaison.EnvoiAck(trame.GetNumero(), trame.GetAdrDestination(), trame.GetAdrSource());
                     numeroTrameAttendue++;
-                    Console.Out.WriteLine("Machine " + trame.GetAdrSource() + " : Envoi accusé de réception packet" + trame.GetNumero());
-                    if(trame.GetTypeTrame() != Trame.TypeTrame.End)
+                    Console.Out.WriteLine("Machine " + trame.GetAdrSource() + " : Envoi accusé de réception paquet" + trame.GetNumero());
+                    if (trame.GetTypeTrame() != Trame.TypeTrame.End)
+                    {
                         Noyau.ecrireFichier(Transtypage.IntegerToBits(trame.GetDonnees(), 8)); //on envoit la trame a la couche reseau
+                    }
                 }
                 else if (trame.GetNumero() == numeroTrameAttendue - 1)//le ack precedemment envoye n'a pas ete recu
                 {
                     Liaison.CoucheLiaison.EnvoiAck(trame.GetNumero(), trame.GetAdrDestination(), trame.GetAdrSource());
-                    Console.Out.WriteLine("Machine " + trame.GetAdrSource() + " : Envoi accusé de réception packet" + trame.GetNumero());
+                    Console.Out.WriteLine("Machine " + trame.GetAdrSource() + " : Envoi accusé de réception paquet" + trame.GetNumero());
                 }
                 return trame.GetNumero();
             }

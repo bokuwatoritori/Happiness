@@ -213,7 +213,7 @@ namespace ConsoleApplication2
                 else if(Convert.ToChar(reponseint) == 'N' || Convert.ToChar(reponseint) == 'n')
                 {
                     repondu = true;
-                    couchePhy = new Physique.CouchePhysique(0,0,0,0,0);
+                    couchePhy = new Physique.CouchePhysique();
                 }
             }
             outputFile = new System.IO.StreamWriter(adresseecriture);

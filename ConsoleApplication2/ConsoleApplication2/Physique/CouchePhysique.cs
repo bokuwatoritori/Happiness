@@ -38,11 +38,11 @@ namespace ConsoleApplication2.Physique
                 Console.WriteLine("                        4 em semaphore passe");
                 //On s'assure que personne ne touche aux variables en meme temps
                 //On verifie tout de meme pour respecter l'enonce 2.3
-
                 if (!Noyau.pretEmettre && !Noyau.donneRecue)
                 {
                     Console.WriteLine("Couche Physique : Debut du transfert sur la couche physique...");
                     trame = new bool[Noyau.envoieSource.Length];
+
                     for (int i = 0; i < trame.Length; i++)
                     {
                         trame[i] = Noyau.envoieSource[i];
@@ -69,8 +69,13 @@ namespace ConsoleApplication2.Physique
                     perturb.Clean();
                     Console.WriteLine("Couche Physique : Trame arrivee a destination ...");
                 }
-                Noyau.mutex1.Release();
+                else
+                {
+                    Noyau.synchcond1.Release();
+                    Noyau.synchcond2.Release();
+                }
                 Noyau.mutex2.Release();
+                Noyau.mutex1.Release();
 
             }
 
