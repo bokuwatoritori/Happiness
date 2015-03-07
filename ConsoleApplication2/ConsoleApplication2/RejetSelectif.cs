@@ -17,6 +17,7 @@ namespace ConsoleApplication2
 
         public RejetSelectif(int taille)
         {
+            reception = new Dictionary<int, bool[]>();
             tailleFenetre = taille;
         }
         protected override int ReceptionPaquet(Trame trame, bool erreur)
