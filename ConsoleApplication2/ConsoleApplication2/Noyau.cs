@@ -225,7 +225,7 @@ namespace ConsoleApplication2
                     else if (texteEnvoi.ToUpper().Equals("N"))
                 {
                     repondu = true;
-                    couchePhy = new Physique.CouchePhysique(0,0,0,0,0);
+                    couchePhy = new Physique.CouchePhysique(0.03f,0.03f,0.01f,0.05f,0.01f);
                 }
 
                 }

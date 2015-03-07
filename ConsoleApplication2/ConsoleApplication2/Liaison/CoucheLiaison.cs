@@ -119,7 +119,7 @@ namespace ConsoleApplication2.Liaison
                 envoie = new Trame(Trame.TypeTrame.Data, emission[noTrame].Length, noTrame, Noyau.hammingCorrecteur, 1, 0, emission[noTrame]);
             else
                  envoie =  new Trame(Trame.TypeTrame.End,0,noTrame,Noyau.hammingCorrecteur,1,0,new bool[8]);
-            bool[] paquet = Hamm2.ajouteHamming(envoie.ToBool());
+            bool[] paquet = Hamming.ajouteHamming(envoie.ToBool());
             Send(paquet);
         }
 
@@ -156,13 +156,17 @@ namespace ConsoleApplication2.Liaison
                 }
 
                 Trame tramePropre;
-                Hamm2.retour resultHamming;
+                Hamming.retour resultHamming;
                 resultHamming = Hamming.HammingReception(trame);
                 tramePropre = new Trame(resultHamming.tabTrame);
-                Console.WriteLine(tramePropre.GetDonnees());
                 if (tramePropre.GetAdrDestination() == Convert.ToInt32(isEmetteur))
                 {
                     retour = rj.Receive(resultHamming);
+                    Noyau.donneRecue = false;
+                    Noyau.synchcond2.Release();
+                }
+                else if (tramePropre.GetAdrDestination() > 1) //Car taille d'adresse pas adaptée
+                {
                     Noyau.donneRecue = false;
                     Noyau.synchcond2.Release();
                 }
@@ -173,6 +177,11 @@ namespace ConsoleApplication2.Liaison
                 Noyau.donneRecue = false;
                 Noyau.synchcond2.Release();
             }
+            Console.WriteLine(Noyau.donneRecue);
+            if (Noyau.receptionDestination != null)
+                Hamm2.AfficheTab(Noyau.receptionDestination, Noyau.receptionDestination.Length);
+            else
+                Console.WriteLine("ZBRRRRRRRRRRRRRRRA");
                 
             Noyau.mutex2.Release();
             return retour;
@@ -183,7 +192,7 @@ namespace ConsoleApplication2.Liaison
         {
             bool[] trameEnvoi = new bool[33];
             Trame trame = new Trame(Trame.TypeTrame.Ack, 0, numero, Noyau.hammingCorrecteur, adrSrc, adrDest, '\0');
-            trameEnvoi = Hamm2.ajouteHamming(trame.ToBool());
+            trameEnvoi = Hamming.ajouteHamming(trame.ToBool());
             Send(trameEnvoi);
         }
 
@@ -191,7 +200,7 @@ namespace ConsoleApplication2.Liaison
         {
             bool[] trameEnvoi = new bool[33];
             Trame trame = new Trame(Trame.TypeTrame.Nack, 0, numero, Noyau.hammingCorrecteur, adrSrc, adrDest, '\0');
-            trameEnvoi = Hamm2.ajouteHamming(trame.ToBool());
+            trameEnvoi = Hamming.ajouteHamming(trame.ToBool());
             Send(trameEnvoi);
         }
     }

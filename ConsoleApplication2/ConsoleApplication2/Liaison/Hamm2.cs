@@ -234,7 +234,10 @@ namespace ConsoleApplication2.Liaison
             String s = " ";
             for (int i = 0; i < tailleTab; i++)
             {
-                s += tab[i] + " | ";
+                if (tab[i])
+                    s += "1";
+                else
+                    s += "0";
             }
             System.Console.WriteLine(s);
         }

@@ -24,11 +24,11 @@ namespace ConsoleApplication2.Physique
         }
         public Perturbations()
         {
-            this.affaiblissement = 0.03f;
-            this.interference = 0.03f;
-            this.dedoublement = 0.08f;
-            this.pretard = 0.08f;
-            this.perte = 0.02f;
+            this.affaiblissement = 0.01f;
+            this.interference = 0.01f;
+            this.dedoublement = 0.02f;
+            this.pretard = 0.02f;
+            this.perte = 0.005f;
 
         }
 
