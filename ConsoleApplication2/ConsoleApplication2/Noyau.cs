@@ -176,7 +176,6 @@ namespace ConsoleApplication2
                         texteEnvoi = Console.ReadLine();
                     }
                         affaiblissement = (float) Convert.ToDecimal(texteEnvoi, CultureInfo.InvariantCulture);
-                        Console.WriteLine(affaiblissement.ToString());
                     texteEnvoi = null;
 
                     Console.WriteLine("Veuillez un chiffre entre 0 et 1 pour définir le taux de probabilité pour l'interference : ");
