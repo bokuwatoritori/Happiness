@@ -41,7 +41,6 @@ namespace ConsoleApplication2
 
         public static void Run()
         {
-            int reponseint;
             bool repondu = false;
             string texteEnvoi;
             Liaison.CoucheLiaison emetteur = null;
@@ -99,7 +98,6 @@ namespace ConsoleApplication2
                             Console.WriteLine("Erreur, souhaitez vous utiliser un code correcteur d'erreur (Hamming) ? (Y/N)");
                             texteEnvoi = Console.ReadLine();
                         }
-                        reponseint = 0;
                         repondu = true;
                     }
 
